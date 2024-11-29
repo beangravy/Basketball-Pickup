@@ -270,18 +270,8 @@
         </div>
         <div>
           <ul style="width: 15rem; overflow: hidden">
-            <!--  <li>Current Players</li>-->
+            <li>Current Game Players</li>
             <li id="playerList"></li>
-            <!--   <li id="player1"></li>
-            <li id="player2"></li>
-            <li id="player3"></li>
-            <li id="player4"></li>
-            <li id="player5"></li>
-            <li id="player6"></li>
-            <li id="player7"></li>
-            <li id="player8"></li>
-            <li id="player9"></li>
-            <li id="player10"></li>-->
           </ul>
         </div>
       </div>
@@ -552,6 +542,7 @@
         saveToLocalStorage();
         saveleaveToLocalStorage();
         displayTasks();
+        playerList.innerHTML = "";
       }
     }
 
