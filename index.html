@@ -291,7 +291,9 @@
           <p><span id="todoCount">0</span> players total</p>
           <button id="undoButton">Undo</button>
           <button id="clearButton">Clear</button>
-          <button id="deleteButton">Delete</button>
+          <button id="leaveButton">Leave</button>
+          <button id="leftButton">Show Left</button>
+          <button id="resetAllButton">Reset All</button>
         </div>
       </div>
     </section>
@@ -300,25 +302,17 @@
     let todo = JSON.parse(localStorage.getItem("todo")) || [];
     let todoBackup = JSON.parse(localStorage.getItem("todoBackup")) || [];
     let todoTemp = JSON.parse(localStorage.getItem("todoTemp")) || [];
+    let leave = JSON.parse(localStorage.getItem("leave")) || [];
     const todoInput = document.getElementById("todoInput");
     const todoList = document.getElementById("todoList");
     const playerList = document.getElementById("playerList");
     const todoCount = document.getElementById("todoCount");
-    const player1 = document.getElementById("player1");
-    const player2 = document.getElementById("player2");
-    const player3 = document.getElementById("player3");
-    const player4 = document.getElementById("player4");
-    const player5 = document.getElementById("player5");
-    const player6 = document.getElementById("player6");
-    const player7 = document.getElementById("player7");
-    const player8 = document.getElementById("player8");
-    const player9 = document.getElementById("player9");
-    const player10 = document.getElementById("player10");
     const addButton = document.querySelector(".btn");
     const nextTenButton = document.querySelector(".nextTenButton");
-    const deleteButton = document.getElementById("deleteButton");
+    const leaveButton = document.getElementById("leaveButton");
+    const leftButton = document.getElementById("leftButton");
+    const resetAllButton = document.getElementById("resetAllButton");
     const playButton = document.querySelector(".playButton");
-
     const clearButton = document.getElementById("clearButton");
     const undoButton = document.getElementById("undoButton");
 
@@ -330,7 +324,9 @@
           addTask();
         }
       });
-      deleteButton.addEventListener("click", deleteAllChecked);
+      leaveButton.addEventListener("click", leaveAllChecked);
+      leftButton.addEventListener("click", showLeft);
+      resetAllButton.addEventListener("click", resetAll);
       playButton.addEventListener("click", playGame);
       nextTenButton.addEventListener("click", nextTen);
       clearButton.addEventListener("click", clearChecked);
@@ -388,12 +384,13 @@
       });
       todoCount.textContent = todo.length;
     }
+
     function displayPlayers() {
       console.log("made it to displayPlayers");
       playerList.innerHTML = "";
       todo.forEach((item, index) => {
         console.log(todo[index].disabled);
-            if (todo[index].disabled === true) {
+        if (todo[index].disabled === true) {
           const p = document.createElement("p");
           //  p.innerHTML = `
           //  <div class="todo-container">
@@ -405,7 +402,7 @@
           <class="todo-checkbox" id="input-${index}">
           <p id="todo-${index}" class="${
             item.disabled ? "disabled" : ""
-          }editTask(${index})">${item.text}   ${item.gamesPlayed}</p>
+          }editTask(${index})">${item.text}   ${item.gamesPlayed + 1}</p>
         </div>
       `;
           p.querySelector(".todo-checkbox");
@@ -433,12 +430,14 @@
       });
     }
 
+    //for on-click events to change the status of the checkbox and save
     function toggleTask(index) {
       todo[index].disabled = !todo[index].disabled;
       saveToLocalStorage();
       displayTasks();
     }
 
+    //clear the check on any players
     function clearChecked() {
       for (let i = 0; i < todo.length; i++) {
         console.log(i);
@@ -448,6 +447,7 @@
       displayTasks();
     }
 
+    //select the next 10 players on the list
     function nextTen() {
       console.log("just before clear checked");
       clearChecked();
@@ -466,6 +466,7 @@
       displayTasks();
     }
 
+    //pulls the data from backup at the sametime replacing the backup with the current player list incase the backup was not really what was required
     function undoTask() {
       console.log("UNDOTASK");
       todoTemp = [...todo];
@@ -475,6 +476,7 @@
       displayTasks();
     }
 
+    //creates a backup then copyies the checked players to the right side, then moves the checked players to the bottom of the list unchecked
     function playGame() {
       todoBackup = [...todo];
       displayPlayers();
@@ -511,21 +513,56 @@
       displayTasks();
     }
 
-    function deleteAllChecked() {
+    //copies any checked player to the leave list which are players who do not want to play anymore (potentially could come back in)
+    function leaveAllChecked() {
       //todo.forEach((todoThing, index) => {
       for (let i = 0; i < todo.length; i++) {
         if (todo[i].disabled) {
+          let x = todo[i].text;
+          let y = todo[i].gamesPlayed;
+          leave.push({ text: x, disabled: false, gamesPlayed: y });
           todo.splice(i, 1);
+          console.log(leave);
           i--;
         }
       }
       saveToLocalStorage();
+      saveleaveToLocalStorage();
       displayTasks();
       //}
     }
 
+    //switch to showing those players that have left (current method is to copy the players to the current list and the current players to leave, this is so it could be reversed by the same button)
+    function showLeft() {
+      todoTemp = [...todo];
+      todo = [...leave];
+      leave = [...todoTemp];
+      saveToLocalStorage();
+      saveleaveToLocalStorage();
+      displayTasks();
+    }
+
+    //resets the two main arrays after making a copy of the current players so it could be undone if pressed by mistake (only if the player list is not erased or this would erase the backup)
+    function resetAll() {
+      console.log(todo.lenght);
+      if (todo.length !== 0) {
+        todoBackup = [...todo];
+        todo = [];
+        leave = [];
+        saveToLocalStorage();
+        saveleaveToLocalStorage();
+        displayTasks();
+      }
+    }
+
+    //saves the player list
     function saveToLocalStorage() {
       localStorage.setItem("todo", JSON.stringify(todo));
+    }
+
+    //saves the player who left or "leave" list
+    function saveleaveToLocalStorage() {
+      localStorage.setItem("leave", JSON.stringify(leave));
     }
   </script>
 </html>
