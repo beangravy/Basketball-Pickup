@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      :root {
+        --gradient: linear-gradient(
+          180deg,
+          rgba(45, 112, 1253, 0.73) 0%,
+          #163e92 100%
+        );
+        --dark: #001747;
+        --grey: #b1bacb;
+        --grey-border: rgba(210, 210, 210, 0.75);
+        --grey-light: #eeeeee;
+        --grey-dark: $405175;
+        --blue: #2d70fd;
+        --green: #00d8a7;
+        --white: #ffffff;
+      }
+
+      body {
+        background: var(--gradient);
+        margin: 2rem;
+        height: 45rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+      }
+
+      .btn {
+        color: var(--white);
+        font-size: 1rem;
+        padding: 0.3rem 0.3rem;
+        border-radius: 0.3rem;
+        background-color: var(--blue);
+        border: none;
+        position: absolute;
+        right: 50%;
+        bottom: 0.25rem;
+      }
+      .nextTenButton {
+        color: var(--white);
+        font-size: 1rem;
+        padding: 0.3rem 0.3rem;
+        border-radius: 0.3rem;
+        background-color: var(--blue);
+        border: none;
+        position: absolute;
+        right: 25%;
+        bottom: 0.25rem;
+      }
+      .playButton {
+        color: var(--white);
+        font-size: 1rem;
+        padding: 0.3rem 0.3rem;
+        border-radius: 0.3rem;
+        background-color: var(--blue);
+        border: none;
+        position: absolute;
+        right: 5%;
+        bottom: 0.25rem;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p {
+        margin: 0;
+      }
+
+      /* Todo Container */
+
+      .todo {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        border-radius: 1rem;
+        background: var(--white);
+        padding: 1rem;
+        height: 40rem;
+        width: 60%;
+        box-shadow: 0 1rem 3rem 1rem rgba(0, 23, 71, 0.15);
+        max-width: 30rem;
+      }
+
+      h2 {
+        text-transform: uppercase;
+        height: 2rem;
+        color: var(--dark);
+        text-align: center;
+      }
+      .playerlists {
+        display: flex;
+        flex-direction: row;
+        width: 15rem;
+      }
+      .input {
+        position: relative;
+        display: flex;
+      }
+
+      .input-field {
+        width: 48%;
+        border: 0.06rem solid #d2d2d2bf;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        font-size: 1rem;
+      }
+
+      input[type="text"]::placeholder {
+        color: var(--grey);
+      }
+
+      .todo-container {
+        display: flex;
+        gap: 1rem;
+      }
+
+      ul {
+        padding: 0;
+        margin: 0;
+        overflow-y: scroll;
+      }
+
+      li {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.5rem;
+      }
+
+      #todoList p {
+        display: flex;
+        gap: 1rem;
+        color: var(--dark);
+        align-items: center;
+      }
+
+      #playerlist p {
+        display: flex;
+        gap: 1rem;
+        color: var(--dark);
+        align-items: center;
+      }
+
+      #todoList .disabled {
+        color: var(--green);
+      }
+
+      .disabled {
+        display: flex;
+      }
+
+      input[type="checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        cursor: pointer;
+      }
+
+      input[type="checkbox"]::before {
+        content: "\2713";
+        display: inline-block;
+        width: 1rem;
+        height: 1rem;
+        font-size: 1rem;
+        text-align: center;
+        border: 0.06rem solid var(--grey-border);
+        border-radius: 50%;
+        color: transparent;
+      }
+
+      input[type="checkbox"]:checked::before {
+        color: var(--white);
+        background-color: var(--green);
+        border: 0.06rem solid var(--green);
+        border-radius: 50%;
+      }
+
+      .counter {
+        border: 0.06rem solid var(--grey-light);
+      }
+
+      .counter-container {
+        height: 2rem;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .counter-container p {
+        align-self: center;
+      }
+
+      .counter-container button {
+        border: none;
+        background-color: var(--blue);
+        color: var(--white);
+        font-size: 1rem;
+        border-radius: 0.3rem;
+      }
+
+      .footer {
+        display: flex;
+        gap: 1.8rem;
+        background-color: var(--white);
+        padding: 1.2rem;
+        border-radius: 0.5rem;
+      }
+
+      .made-by,
+      .author {
+        font-size: 0.9rem;
+      }
+
+      .made-by {
+        color: var(--grey-dark);
+      }
+
+      .author {
+        color: var(--blue);
+        font-weight: bold;
+      }
+
+      .scroll {
+        height: 32rem;
+        width: 15rem;
+        scrollbar-width: thin;
+      }
+
+      .scroll::-webkit-scrollbar {
+        width: 0.6rem;
+      }
+
+      .scroll::-webkit-scrollbar-thumb {
+        background-color: var(--blue);
+        border-radius: 0.5rem;
+      }
+
+      .scroll::-webkit-scrollbar-track {
+        display: none;
+      }
+    </style>
+    <title>Basketball</title>
+  </head>
+  <body>
+    <section class="todo">
+      <h2>Basketball CheckIn</h2>
+      <div class="input">
+        <input
+          type="text"
+          class="input-field"
+          id="todoInput"
+          placeholder="Add a new player"
+        />
+        <button class="btn">Add</button>
+        <button class="nextTenButton">Next 10</button>
+        <button class="playButton">Play</button>
+      </div>
+      <div class="playerlists">
+        <div>
+          <ul class="scroll">
+            <li id="todoList"></li>
+          </ul>
+        </div>
+        <div>
+          <ul style="width: 15rem; overflow: hidden">
+            <!--  <li>Current Players</li>-->
+            <li id="playerList"></li>
+            <!--   <li id="player1"></li>
+            <li id="player2"></li>
+            <li id="player3"></li>
+            <li id="player4"></li>
+            <li id="player5"></li>
+            <li id="player6"></li>
+            <li id="player7"></li>
+            <li id="player8"></li>
+            <li id="player9"></li>
+            <li id="player10"></li>-->
+          </ul>
+        </div>
+      </div>
+      <div>
+        <hr class="counter" />
+        <div class="counter-container">
+          <p><span id="todoCount">0</span> players total</p>
+          <button id="undoButton">Undo</button>
+          <button id="clearButton">Clear</button>
+          <button id="deleteButton">Delete</button>
+        </div>
+      </div>
+    </section>
+  </body>
+  <script>
+    let todo = JSON.parse(localStorage.getItem("todo")) || [];
+    let todoBackup = JSON.parse(localStorage.getItem("todoBackup")) || [];
+    let todoTemp = JSON.parse(localStorage.getItem("todoTemp")) || [];
+    const todoInput = document.getElementById("todoInput");
+    const todoList = document.getElementById("todoList");
+    const playerList = document.getElementById("playerList");
+    const todoCount = document.getElementById("todoCount");
+    const player1 = document.getElementById("player1");
+    const player2 = document.getElementById("player2");
+    const player3 = document.getElementById("player3");
+    const player4 = document.getElementById("player4");
+    const player5 = document.getElementById("player5");
+    const player6 = document.getElementById("player6");
+    const player7 = document.getElementById("player7");
+    const player8 = document.getElementById("player8");
+    const player9 = document.getElementById("player9");
+    const player10 = document.getElementById("player10");
+    const addButton = document.querySelector(".btn");
+    const nextTenButton = document.querySelector(".nextTenButton");
+    const deleteButton = document.getElementById("deleteButton");
+    const playButton = document.querySelector(".playButton");
+
+    const clearButton = document.getElementById("clearButton");
+    const undoButton = document.getElementById("undoButton");
+
+    document.addEventListener("DOMContentLoaded", function () {
+      addButton.addEventListener("click", addTask);
+      todoInput.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+          event.preventDefault(); // Prevents default Enter key behavior
+          addTask();
+        }
+      });
+      deleteButton.addEventListener("click", deleteAllChecked);
+      playButton.addEventListener("click", playGame);
+      nextTenButton.addEventListener("click", nextTen);
+      clearButton.addEventListener("click", clearChecked);
+      undoButton.addEventListener("click", undoTask);
+      displayTasks();
+    });
+
+    function addTask() {
+      const newTask = todoInput.value.trim();
+      if (newTask !== "") {
+        if (todo.length === 0) {
+          console.log("onlyfirst");
+          todo.push({ text: newTask, disabled: false, gamesPlayed: 0 });
+        } else {
+          if (todo[todo.length - 1].gamesPlayed === 0) {
+            todo.push({ text: newTask, disabled: false, gamesPlayed: 0 });
+          } else {
+            for (let i = 0; i < todo.length; i++) {
+              console.log(i);
+              if (todo[i].gamesPlayed !== 0) {
+                todo.splice(i, 0, {
+                  text: newTask,
+                  disabled: false,
+                  gamesPlayed: 0,
+                });
+                break;
+              }
+            }
+          }
+        }
+        todoInput.value = "";
+        saveToLocalStorage();
+        displayTasks();
+      }
+    }
+
+    function displayTasks() {
+      todoList.innerHTML = "";
+      todo.forEach((item, index) => {
+        const p = document.createElement("p");
+        p.innerHTML = `
+        <div class="todo-container">
+          <input type="checkbox" class="todo-checkbox" id="input-${index}" ${
+          item.disabled ? "checked" : ""
+        }>
+          <p id="todo-${index}" class="${
+          item.disabled ? "disabled" : ""
+        }" onclick="editTask(${index})">${item.text}   ${item.gamesPlayed}</p>
+        </div>
+      `;
+        p.querySelector(".todo-checkbox").addEventListener("change", () =>
+          toggleTask(index)
+        );
+        todoList.appendChild(p);
+      });
+      todoCount.textContent = todo.length;
+    }
+    function displayPlayers() {
+      console.log("made it to displayPlayers");
+      playerList.innerHTML = "";
+      todo.forEach((item, index) => {
+        console.log(todo[index].disabled);
+            if (todo[index].disabled === true) {
+          const p = document.createElement("p");
+          //  p.innerHTML = `
+          //  <div class="todo-container">
+          //     <p id="player-${index}"   ${item.text}</p>
+          //  </div>
+          // `;
+          p.innerHTML = `
+        <div class="todo-container">
+          <class="todo-checkbox" id="input-${index}">
+          <p id="todo-${index}" class="${
+            item.disabled ? "disabled" : ""
+          }editTask(${index})">${item.text}   ${item.gamesPlayed}</p>
+        </div>
+      `;
+          p.querySelector(".todo-checkbox");
+          playerList.appendChild(p);
+        }
+      });
+    }
+
+    function editTask(index) {
+      const todoItem = document.getElementById(`todo-${index}`);
+      const existingText = todo[index].text;
+      const inputElement = document.createElement("input");
+
+      inputElement.value = existingText;
+      todoItem.replaceWith(inputElement);
+      inputElement.focus();
+
+      inputElement.addEventListener("blur", function () {
+        const updatedText = inputElement.value.trim();
+        if (updatedText) {
+          todo[index].text = updatedText;
+          saveToLocalStorage();
+        }
+        displayTasks();
+      });
+    }
+
+    function toggleTask(index) {
+      todo[index].disabled = !todo[index].disabled;
+      saveToLocalStorage();
+      displayTasks();
+    }
+
+    function clearChecked() {
+      for (let i = 0; i < todo.length; i++) {
+        console.log(i);
+        todo[i].disabled = false;
+      }
+      saveToLocalStorage();
+      displayTasks();
+    }
+
+    function nextTen() {
+      console.log("just before clear checked");
+      clearChecked();
+      let maxPlayers = 0;
+      console.log("made it to next ten");
+      if (todo.length < 10) {
+        maxPlayers = todo.length;
+      } else {
+        maxPlayers = 10;
+      }
+      console.log(maxPlayers);
+      for (let i = 0; i < maxPlayers; i++) {
+        todo[i].disabled = true;
+      }
+      saveToLocalStorage();
+      displayTasks();
+    }
+
+    function undoTask() {
+      console.log("UNDOTASK");
+      todoTemp = [...todo];
+      todo = [...todoBackup];
+      todoBackup = [...todoTemp];
+      saveToLocalStorage();
+      displayTasks();
+    }
+
+    function playGame() {
+      todoBackup = [...todo];
+      displayPlayers();
+      //todo.forEach((todoMove, index) => {
+      for (let i = 0; i < todo.length; i++) {
+        //  console.log(i);
+        if (todo[i].disabled) {
+          //console.log(i);
+          //console.log(todo[i].text);
+          let copyTodoText = todo[i].text;
+          let copyTodoGames = todo[i].gamesPlayed + 1;
+          todo.splice(i, 1);
+          i--;
+          todo.push({
+            text: copyTodoText,
+            disabled: false,
+            gamesPlayed: copyTodoGames,
+          });
+          //console.log(i);
+          //displayPlayers();
+          //player1.textContent = todo[todo.length - 10].text;
+          //player2.textContent = todo[todo.length - 9].text;
+          //player3.textContent = todo[todo.length - 8].text;
+          //player4.textContent = todo[todo.length - 7].text;
+          //player5.textContent = todo[todo.length - 6].text;
+          //player6.textContent = todo[todo.length - 5].text;
+          //player7.textContent = todo[todo.length - 4].text;
+          //player8.textContent = todo[todo.length - 3].text;
+          //player9.textContent = todo[todo.length - 2].text;
+          //player10.textContent = todo[todo.length - 1].text;
+        }
+      }
+      saveToLocalStorage();
+      displayTasks();
+    }
+
+    function deleteAllChecked() {
+      //todo.forEach((todoThing, index) => {
+      for (let i = 0; i < todo.length; i++) {
+        if (todo[i].disabled) {
+          todo.splice(i, 1);
+          i--;
+        }
+      }
+      saveToLocalStorage();
+      displayTasks();
+      //}
+    }
+
+    function saveToLocalStorage() {
+      localStorage.setItem("todo", JSON.stringify(todo));
+    }
+  </script>
+</html>
