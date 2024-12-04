@@ -15,6 +15,7 @@
         --grey-border: rgba(210, 210, 210, 0.75);
         --grey-light: #eeeeee;
         --grey-dark: $405175;
+
         --blue: #2d70fd;
         --green: #00d8a7;
         --white: #ffffff;
@@ -278,10 +279,10 @@
       <div>
         <hr class="counter" />
         <div class="counter-container">
-          <p><span id="todoCount">0</span> players total</p>
+          <p><span id="playerCount">0</span> players total</p>
           <button id="undoButton">Undo</button>
           <button id="clearButton">Clear</button>
-          <button id="leaveButton">Leave</button>
+          <button id="leaveButton">Mark Left</button>
           <button id="leftButton">Show Left</button>
           <button id="resetAllButton">Reset All</button>
         </div>
@@ -296,7 +297,7 @@
     const todoInput = document.getElementById("todoInput");
     const todoList = document.getElementById("todoList");
     const playerList = document.getElementById("playerList");
-    const todoCount = document.getElementById("todoCount");
+    const playerCount = document.getElementById("playerCount");
     const addButton = document.querySelector(".btn");
     const nextTenButton = document.querySelector(".nextTenButton");
     const leaveButton = document.getElementById("leaveButton");
@@ -372,7 +373,7 @@
         );
         todoList.appendChild(p);
       });
-      todoCount.textContent = todo.length;
+      playerCount.textContent = todo.length;
     }
 
     function displayPlayers() {
@@ -522,7 +523,7 @@
       //}
     }
 
-    //switch to showing those players that have left (current method is to copy the players to the current list and the current players to leave, this is so it could be reversed by the same button)
+    //switch to showing those players that have left (current method is to copy the players to the current list and the current players to leave, button switches to show active
     function showLeft() {
       todoTemp = [...todo];
       todo = [...leave];
@@ -530,6 +531,37 @@
       saveToLocalStorage();
       saveleaveToLocalStorage();
       displayTasks();
+      if (leftButton.innerHTML !== "Show Active") {
+        nextTenButton.disabled = true;
+        nextTenButton.style.backgroundColor = "gray";
+        playButton.disabled = true;
+        playButton.style.backgroundColor = "gray";
+        undoButton.disabled = true;
+        undoButton.style.backgroundColor = "gray";
+        resetAllButton.disabled = true;
+        resetAllButton.style.backgroundColor = "gray";
+        addButton.disabled = true;
+        addButton.style.backgroundColor = "gray";
+        clearButton.disabled = true;
+        clearButton.style.backgroundColor = "gray";
+        leaveButton.innerHTML = "Mark Active";
+        leftButton.innerHTML = "Show Active";
+      } else {
+        nextTenButton.disabled = false;
+        nextTenButton.style.backgroundColor = "#2d70fd";
+        playButton.disabled = false;
+        playButton.style.backgroundColor = "#2d70fd";
+        undoButton.disabled = false;
+        undoButton.style.backgroundColor = "#2d70fd";
+        resetAllButton.disabled = false;
+        resetAllButton.style.backgroundColor = "#2d70fd";
+        addButton.disabled = false;
+        addButton.style.backgroundColor = "#2d70fd";
+        clearButton.disabled = false;
+        clearButton.style.backgroundColor = "#2d70fd";
+        leaveButton.innerHTML = "Mark Left";
+        leftButton.innerHTML = "Show Left";
+      }
     }
 
     //resets the two main arrays after making a copy of the current players so it could be undone if pressed by mistake (only if the player list is not erased or this would erase the backup)
