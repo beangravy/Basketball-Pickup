@@ -6,10 +6,10 @@
     <style>
       :root {
         --dark: #001747;
-        --grey: #b1bacb;
-        --grey-border: rgba(210, 210, 210, 0.75);
-        --grey-light: #eeeeee;
-        --grey-dark: $405175;
+        --gray: #b1bacb;
+        --gray-border: rgba(100, 210, 210, 0.75);
+        --gray-light: #eeeeee;
+        --gray-dark: $405175;
 
         --blue: #2d70fd;
         --green: #44b858;
@@ -17,12 +17,13 @@
       }
 
       body {
-        background: var(--green);
+        /*background: var(--green);*/
         margin: 2rem;
-        min-height: 45rem;
+        /*min-height: 45rem;*/
+        height: 85vh;
         display: flex;
         flex-direction: column;
-        justify-content: space-evenly;
+        /*justify-content: space-evenly;*/
         align-items: center;
       }
 
@@ -46,7 +47,19 @@
         background-color: var(--green);
         border: none;
         position: absolute;
-        right: 25%;
+        right: 35%;
+        bottom: 0.25rem;
+      }
+
+      .clearButton {
+        color: var(--white);
+        font-size: 1rem;
+        padding: 0.3rem 0.3rem;
+        border-radius: 0.3rem;
+        background-color: var(--green);
+        border: none;
+        position: absolute;
+        right: 18%;
         bottom: 0.25rem;
       }
 
@@ -80,9 +93,9 @@
         border-radius: 1rem;
         background: var(--white);
         padding: 1rem;
-        height: 100%;
+        height: 80vh;
         width: 100%;
-        box-shadow: 0 1rem 3rem 1rem rgba(0, 23, 71, 0.15);
+        /*box-shadow: 0 1rem 3rem 1rem rgba(0, 23, 71, 0.15);*/
         max-width: 30rem;
       }
 
@@ -96,7 +109,8 @@
       .playerlists {
         display: flex;
         flex-direction: row;
-        width: 15rem;
+        width: 10rem;
+        /*height: 80vh ;*/
       }
 
       .input {
@@ -113,7 +127,7 @@
       }
 
       input[type="text"]::placeholder {
-        color: var(--grey);
+        color: var(--gray);
       }
 
       .player-container {
@@ -170,7 +184,7 @@
         height: 1rem;
         font-size: 1rem;
         text-align: center;
-        border: 0.06rem solid var(--grey-border);
+        border: 0.06rem solid var(--gray-border);
         border-radius: 50%;
         color: transparent;
       }
@@ -183,7 +197,7 @@
       }
 
       .counter {
-        border: 0.06rem solid var(--grey-light);
+        border: 0.06rem solid var(--gray-light);
       }
 
       .counter-container {
@@ -205,8 +219,8 @@
       }
 
       .scroll {
-        min-height: 32rem;
-        width: 15rem;
+        height: 70vh;
+        width: 12rem;
         scrollbar-width: thin;
       }
 
@@ -236,7 +250,8 @@
           placeholder="Add a new player"
         />
         <button class="btn">Add</button>
-        <button class="nextTenButton">Next 10</button>
+        <button class="nextTenButton">Next</button>
+        <button class="clearButton">Clear</button>
         <button class="playButton">Play</button>
       </div>
       <div class="playerlists">
@@ -257,10 +272,9 @@
         <div class="counter-container">
           <p><span id="playerCount">0</span> players total</p>
           <button id="undoButton">Undo</button>
-          <button id="clearButton">Clear</button>
-          <button id="leaveButton">Mark Left</button>
+          <button id="leaveButton">Left</button>
           <button id="leftButton">Show Left</button>
-          <button id="resetAllButton">Reset All</button>
+          <button id="resetAllButton">Reset</button>
         </div>
       </div>
     </section>
