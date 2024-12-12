@@ -262,7 +262,14 @@
           </ul>
         </div>
         <div>
-          <ul style="width: 10rem; overflow: hidden">
+          <ul
+            style="
+              width: 10rem;
+              overflow: hidden;
+              border-left: solid;
+              height: 100%;
+            "
+          >
             <li>Current Game Players</li>
             <li id="currentGameList"></li>
           </ul>
@@ -285,6 +292,9 @@
     let playerBackup = JSON.parse(localStorage.getItem("playerBackup")) || [];
     let playerTemp = JSON.parse(localStorage.getItem("playerTemp")) || [];
     let leave = JSON.parse(localStorage.getItem("leave")) || [];
+    let leaveBackup = JSON.parse(localStorage.getItem("leaveBackup")) || [];
+    let currentPlayers =
+      JSON.parse(localStorage.getItem("currentPlayers")) || [];
     const playerInput = document.getElementById("playerInput");
     const playerList = document.getElementById("playerList");
     const currentGameList = document.getElementById("currentGameList");
@@ -297,6 +307,7 @@
     const playButton = document.querySelector(".playButton");
     const clearButton = document.querySelector(".clearButton");
     const undoButton = document.getElementById("undoButton");
+    let isTen = false;
 
     document.addEventListener("DOMContentLoaded", function () {
       addButton.addEventListener("click", addTask);
@@ -316,6 +327,9 @@
       displayTasks();
     });
 
+    //Add the name in the Input Field to the Player List
+    //it will place them after the last player that hasn't played a game
+    //this may be the top of the list if everyone has played a game
     function addTask() {
       const newTask = playerInput.value.trim();
       if (newTask !== "") {
@@ -343,6 +357,7 @@
       }
     }
 
+    //Display the list of Players
     function displayTasks() {
       playerList.innerHTML = "";
       player.forEach((item, index) => {
@@ -365,25 +380,26 @@
       playerCount.textContent = player.length;
     }
 
+    //Display Players in the Current Game
     function displayPlayers() {
       currentGameList.innerHTML = "";
-      player.forEach((item, index) => {
-        if (player[index].disabled === true) {
-          const p = document.createElement("p");
-          p.innerHTML = `
+      currentPlayers.forEach((item, index) => {
+        player[index];
+        const p = document.createElement("p");
+        p.innerHTML = `
         <div class="player-container">
           <class="player-checkbox" id="input-${index}">
           <p id="player-${index}" class="${
-            item.disabled ? "disabled" : ""
-          }editTask(${index})">${item.text}   ${item.gamesPlayed + 1}</p>
+          item.disabled ? "disabled" : ""
+        }editTask(${index})">${item.text}   ${item.gamesPlayed + 1}</p>
         </div>
       `;
-          p.querySelector(".player-checkbox");
-          currentGameList.appendChild(p);
-        }
+        p.querySelector(".player-checkbox");
+        currentGameList.appendChild(p);
       });
     }
 
+    //Edit a player Name that is already in the list
     function editTask(index) {
       const playerItem = document.getElementById(`player-${index}`);
       const existingText = player[index].text;
@@ -411,7 +427,7 @@
       displayTasks();
     }
 
-    //clear the check on any players
+    //clear the check on all players in the current list
     function clearChecked() {
       for (let i = 0; i < player.length; i++) {
         player[i].disabled = false;
@@ -436,19 +452,31 @@
       displayTasks();
     }
 
-    //pulls the data from backup at the sametime replacing the backup with the current player list incase the backup was not really what was required
+    //pulls the data from backup at the sametime replacing the backup with the current player list 
+    //in case the backup was not really what was required added support fot the players who left
     function undoTask() {
       playerTemp = [...player];
       player = [...playerBackup];
       playerBackup = [...playerTemp];
+
+      playerTemp = [...leave];
+      leave = [...leaveBackup];
+      leaveBackup = [...playerTemp];
+
       saveToLocalStorage();
+      saveleaveToLocalStorage();
       displayTasks();
+      displayPlayers();
     }
 
-    //creates a backup then copyies the checked players to the right side, then moves the checked players to the bottom of the list unchecked
+    //creates a backup then copyies the checked players to the right side
+    //then moves the checked players to the bottom of the list unchecked
+    //added a test to check for 10 players selected currently requires 
+    //clicking play again.
     function playGame() {
       playerBackup = [...player];
-      displayPlayers();
+      leaveBackup = [...leave];
+      currentPlayers = [];
       for (let i = 0; i < player.length; i++) {
         if (player[i].disabled) {
           let copyPlayerText = player[i].text;
@@ -460,7 +488,26 @@
             disabled: false,
             gamesPlayed: copyPlayerGames,
           });
+          currentPlayers.push({
+            text: copyPlayerText,
+            gamesPlayed: copyPlayerGames,
+          });
         }
+      }
+      if (isTen === false) {
+        console.log(isTen);
+        if (currentPlayers.length !== 10) {
+          console.log(currentPlayers.length);
+          player = [...playerBackup];
+          isTen = true;
+          //popup ask if should continue right now does nothing
+        } else {
+          displayPlayers();
+          isTen = false;
+        }
+      } else {
+        displayPlayers();
+        isTen = false;
       }
       saveToLocalStorage();
       displayTasks();
@@ -468,6 +515,8 @@
 
     //copies any checked player to the leave list which are players who do not want to play anymore (potentially could come back in)
     function leaveAllChecked() {
+      leaveBackup = [...leave];
+      playerBackup = [...player];
       for (let i = 0; i < player.length; i++) {
         if (player[i].disabled) {
           let x = player[i].text;
@@ -501,9 +550,7 @@
         resetAllButton.style.backgroundColor = "gray";
         addButton.disabled = true;
         addButton.style.backgroundColor = "gray";
-        //clearButton.disabled = true;
-        //clearButton.style.backgroundColor = "gray";
-        console.log("made it here")
+        console.log("made it here");
         leaveButton.innerHTML = "Active";
         leftButton.innerHTML = "Show Active";
       } else {
@@ -520,17 +567,17 @@
         resetAllButton.style.backgroundColor = btncolor;
         addButton.disabled = false;
         addButton.style.backgroundColor = btncolor;
-        //clearButton.disabled = false;
-        //clearButton.style.backgroundColor = btncolor;
         leaveButton.innerHTML = "Left";
         leftButton.innerHTML = "Show Left";
       }
     }
 
-    //resets the two main arrays after making a copy of the current players so it could be undone if pressed by mistake (only if the player list is not erased or this would erase the backup)
+    //resets the two main arrays after making a copy of the current players so it could be undone 
+    // if pressed by mistake (only if the player list is not erased or this would erase the backup)
     function resetAll() {
       if (player.length !== 0) {
         playerBackup = [...player];
+        leaveBackup = [...leave];
         player = [];
         leave = [];
         saveToLocalStorage();
