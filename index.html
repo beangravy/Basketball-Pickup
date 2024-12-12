@@ -19,7 +19,7 @@
       body {
         /*background: var(--green);*/
         top: 0;
-        margin: 0rem;
+        margin: 0rem 1rem 0rem 1rem;
         /*min-height: 45rem;*/
         height: 85vh;
         display: flex;
@@ -220,7 +220,7 @@
       }
 
       .scroll {
-        height: 70vh;
+        height: 75vh;
         width: 12rem;
         scrollbar-width: thin;
       }
@@ -262,7 +262,7 @@
           </ul>
         </div>
         <div>
-          <ul style="width: 15rem; overflow: hidden">
+          <ul style="width: 10rem; overflow: hidden">
             <li>Current Game Players</li>
             <li id="currentGameList"></li>
           </ul>
@@ -395,6 +395,7 @@
 
       inputElement.addEventListener("blur", function () {
         const updatedText = inputElement.value.trim();
+
         if (updatedText) {
           player[index].text = updatedText;
           saveToLocalStorage();
