@@ -157,7 +157,15 @@
       }
 
       #currentGameList p {
-        padding: .25rem;
+        padding: 0rem;
+        display: flex;
+        /*gap: 1rem;*/
+        color: var(--dark);
+        align-items: center;
+      }
+
+      #lastGameList p {
+        padding: 0rem;
         display: flex;
         /*gap: 1rem;*/
         color: var(--dark);
@@ -269,10 +277,13 @@
               overflow: hidden;
               border-left: solid;
               height: 100%;
+              flex-direction: column;
             "
           >
             <li>Current Game Players</li>
             <li id="currentGameList"></li>
+            <li>Last Game Players</li>
+            <li id="lastGameList"></li>
           </ul>
         </div>
       </div>
@@ -296,9 +307,11 @@
     let leaveBackup = JSON.parse(localStorage.getItem("leaveBackup")) || [];
     let currentPlayers =
       JSON.parse(localStorage.getItem("currentPlayers")) || [];
+    let lastPlayers = JSON.parse(localStorage.getItem("lastPlayers")) || [];
     const playerInput = document.getElementById("playerInput");
     const playerList = document.getElementById("playerList");
     const currentGameList = document.getElementById("currentGameList");
+    const lastGameList = document.getElementById("lastGameList");
     const playerCount = document.getElementById("playerCount");
     const addButton = document.querySelector(".btn");
     const nextTenButton = document.querySelector(".nextTenButton");
@@ -383,6 +396,7 @@
 
     //Display Players in the Current Game
     function displayPlayers() {
+      displaylastPlayers();
       currentGameList.innerHTML = "";
       currentPlayers.forEach((item, index) => {
         player[index];
@@ -397,6 +411,26 @@
       `;
         p.querySelector(".player-checkbox");
         currentGameList.appendChild(p);
+      });
+    }
+
+    //Display Players in the Last Game
+    function displaylastPlayers() {
+      console.log("last game players")
+      lastGameList.innerHTML = "";
+      lastPlayers.forEach((item, index) => {
+        player[index];
+        const p = document.createElement("p");
+        p.innerHTML = `
+        <div class="player-container">
+          <class="player-checkbox" id="input-${index}">
+          <p id="player-${index}" class="${
+          item.disabled ? "disabled" : ""
+        }editTask(${index})">${item.text}   ${item.gamesPlayed}</p>
+        </div>
+      `;
+        p.querySelector(".player-checkbox");
+        lastGameList.appendChild(p);
       });
     }
 
@@ -453,7 +487,7 @@
       displayTasks();
     }
 
-    //pulls the data from backup at the sametime replacing the backup with the current player list 
+    //pulls the data from backup at the sametime replacing the backup with the current player list
     //in case the backup was not really what was required added support fot the players who left
     function undoTask() {
       playerTemp = [...player];
@@ -465,18 +499,19 @@
       leaveBackup = [...playerTemp];
 
       saveToLocalStorage();
-      saveleaveToLocalStorage();
+      //saveleaveToLocalStorage();
       displayTasks();
       displayPlayers();
     }
 
     //creates a backup then copyies the checked players to the right side
     //then moves the checked players to the bottom of the list unchecked
-    //added a test to check for 10 players selected currently requires 
+    //added a test to check for 10 players selected currently requires
     //clicking play again.
     function playGame() {
       playerBackup = [...player];
       leaveBackup = [...leave];
+      lastPlayers = [...currentPlayers];
       currentPlayers = [];
       for (let i = 0; i < player.length; i++) {
         if (player[i].disabled) {
@@ -528,7 +563,7 @@
         }
       }
       saveToLocalStorage();
-      saveleaveToLocalStorage();
+      //saveleaveToLocalStorage();
       displayTasks();
     }
 
@@ -538,7 +573,7 @@
       player = [...leave];
       leave = [...playerTemp];
       saveToLocalStorage();
-      saveleaveToLocalStorage();
+      //saveleaveToLocalStorage();
       displayTasks();
       if (leftButton.innerHTML !== "Show Active") {
         nextTenButton.disabled = true;
@@ -573,7 +608,7 @@
       }
     }
 
-    //resets the two main arrays after making a copy of the current players so it could be undone 
+    //resets the two main arrays after making a copy of the current players so it could be undone
     // if pressed by mistake (only if the player list is not erased or this would erase the backup)
     function resetAll() {
       if (player.length !== 0) {
@@ -582,20 +617,24 @@
         player = [];
         leave = [];
         saveToLocalStorage();
-        saveleaveToLocalStorage();
+        //saveleaveToLocalStorage();
         displayTasks();
         currentGameList.innerHTML = "";
+        lastGameList.innerHTML = "";
       }
     }
 
     //saves the player list
     function saveToLocalStorage() {
       localStorage.setItem("player", JSON.stringify(player));
+      localStorage.setItem("leave", JSON.stringify(leave));
+      localStorage.setItem("currentPlayers", JSON.stringify(currentPlayers));
+      localStorage.setItem("lastPlayers", JSON.stringify(lastPlayers));
     }
 
     //saves the player who left or "leave" list
-    function saveleaveToLocalStorage() {
-      localStorage.setItem("leave", JSON.stringify(leave));
-    }
+    //function saveleaveToLocalStorage() {
+    //  localStorage.setItem("leave", JSON.stringify(leave));
+    //}
   </script>
 </html>
