@@ -416,7 +416,7 @@
 
     //Display Players in the Last Game
     function displaylastPlayers() {
-      console.log("last game players")
+      console.log("last game players");
       lastGameList.innerHTML = "";
       lastPlayers.forEach((item, index) => {
         player[index];
@@ -493,13 +493,10 @@
       playerTemp = [...player];
       player = [...playerBackup];
       playerBackup = [...playerTemp];
-
       playerTemp = [...leave];
       leave = [...leaveBackup];
       leaveBackup = [...playerTemp];
-
       saveToLocalStorage();
-      //saveleaveToLocalStorage();
       displayTasks();
       displayPlayers();
     }
@@ -511,7 +508,7 @@
     function playGame() {
       playerBackup = [...player];
       leaveBackup = [...leave];
-      lastPlayers = [...currentPlayers];
+      playerTemp = [...currentPlayers];
       currentPlayers = [];
       for (let i = 0; i < player.length; i++) {
         if (player[i].disabled) {
@@ -535,13 +532,16 @@
         if (currentPlayers.length !== 10) {
           console.log(currentPlayers.length);
           player = [...playerBackup];
+          currentPlayers = [...playerTemp];
           isTen = true;
           //popup ask if should continue right now does nothing
         } else {
+          lastPlayers = [...playerTemp];
           displayPlayers();
           isTen = false;
         }
       } else {
+        lastPlayers = [...playerTemp];
         displayPlayers();
         isTen = false;
       }
@@ -563,7 +563,6 @@
         }
       }
       saveToLocalStorage();
-      //saveleaveToLocalStorage();
       displayTasks();
     }
 
@@ -573,7 +572,6 @@
       player = [...leave];
       leave = [...playerTemp];
       saveToLocalStorage();
-      //saveleaveToLocalStorage();
       displayTasks();
       if (leftButton.innerHTML !== "Show Active") {
         nextTenButton.disabled = true;
@@ -617,24 +615,18 @@
         player = [];
         leave = [];
         saveToLocalStorage();
-        //saveleaveToLocalStorage();
         displayTasks();
         currentGameList.innerHTML = "";
         lastGameList.innerHTML = "";
       }
     }
 
-    //saves the player list
+    //saves the player lists
     function saveToLocalStorage() {
       localStorage.setItem("player", JSON.stringify(player));
       localStorage.setItem("leave", JSON.stringify(leave));
       localStorage.setItem("currentPlayers", JSON.stringify(currentPlayers));
       localStorage.setItem("lastPlayers", JSON.stringify(lastPlayers));
     }
-
-    //saves the player who left or "leave" list
-    //function saveleaveToLocalStorage() {
-    //  localStorage.setItem("leave", JSON.stringify(leave));
-    //}
   </script>
 </html>
