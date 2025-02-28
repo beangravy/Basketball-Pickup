@@ -322,6 +322,7 @@
     const clearButton = document.querySelector(".clearButton");
     const undoButton = document.getElementById("undoButton");
     let isTen = false;
+    let playNextTen = false;
 
     document.addEventListener("DOMContentLoaded", function () {
       addButton.addEventListener("click", addTask);
@@ -477,8 +478,18 @@
       let maxPlayers = 0;
       if (player.length < 10) {
         maxPlayers = player.length;
-      } else {
+        playNextTen=true;
+      } else {if (playNextTen === false){
         maxPlayers = 10;
+        playNextTen = true;
+      }else {if (player.length < 20) {
+        maxPlayers = player.length;
+        playNextTen = false;
+      }else{
+        maxPlayers =20;
+        playNextTen = false;  
+      }
+      }
       }
       for (let i = 0; i < maxPlayers; i++) {
         player[i].disabled = true;
@@ -510,6 +521,7 @@
       leaveBackup = [...leave];
       playerTemp = [...currentPlayers];
       currentPlayers = [];
+      playNextTen = false;
       for (let i = 0; i < player.length; i++) {
         if (player[i].disabled) {
           let copyPlayerText = player[i].text;
